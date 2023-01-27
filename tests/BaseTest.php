@@ -23,8 +23,12 @@ class BaseTest extends WP_UnitTestCase {
 		}
 
 		$this->base = new class( $this->title, $config ) extends Base {
-			public function hook( WP_Customize_Manager $customizer ): void {}
+			public function hook( WP_Customize_Manager $customizer ): void {
+				echo 'HOOKED!';
+			}
 		};
+
+		parent::setUp();
 	}
 
 	public function test_default_config(): void {
@@ -47,9 +51,21 @@ class BaseTest extends WP_UnitTestCase {
 		$this->assertEquals( $expected, $this->base->get_config() );
 	}
 
-	public function test_registers_correctly_fired_hook(): void {
+	public function test_create_manually_fired(): void {
 		$this->base->create();
 
 		$this->assertSame( 10, has_action( 'customize_register', array( $this->base, 'hook' ) ) );
+	}
+
+	public function test_create_hooked_to_action(): void {
+		add_action( 'customize_register', array( $this->base, 'create' ) );
+
+		ob_start();
+		// mimic customizer page
+		$_REQUEST['wp_customize'] = 'on';
+		_wp_customize_include();
+		do_action( 'wp_loaded' );
+
+		$this->assertSame( 'HOOKED!', ob_get_clean() );
 	}
 }

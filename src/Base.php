@@ -56,9 +56,13 @@ abstract class Base {
 	}
 
 
-	public function create(): void {
+	public function create( ?WP_Customize_Manager $customizer = null ): void {
 
-		add_action( 'customize_register', array( $this, 'hook' ) ); // @codeCoverageIgnore
+		if ( did_action( 'customize_register' ) && null !== $customizer ) {
+			$this->hook( $customizer );
+		} else {
+			add_action( 'customize_register', array( $this, 'hook' ) ); // @codeCoverageIgnore
+		}
 
 	}
 
