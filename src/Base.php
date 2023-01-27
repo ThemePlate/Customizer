@@ -10,27 +10,59 @@
 namespace ThemePlate\Customizer;
 
 use ThemePlate\Core\Fields;
+use ThemePlate\Core\Helper\MainHelper;
 use WP_Customize_Manager;
 
 abstract class Base {
 
+	public const DEFAULTS = array(
+		'data_prefix' => '',
+	);
+
 	protected ?Fields $fields = null;
 
 	protected array $config;
-	protected string $id;
 
 
 	public function __construct( string $title, array $config = array() ) {
 
-		$this->id = sanitize_title( $title );
+		$this->config = MainHelper::fool_proof( self::DEFAULTS, $config );
+		$this->config = MainHelper::fool_proof( static::DEFAULTS, $this->config );
 
-		$this->config = $config;
-
+		$this->config['id']    = sanitize_title( $title );
 		$this->config['title'] = $title;
 
 	}
 
 
-	abstract public function create( WP_Customize_Manager $customizer ): void;
+	/**
+	 * @return array|mixed|null
+	 */
+	public function get_config( string $key = '' ) {
+
+		if ( '' === $key ) {
+			return $this->config;
+		}
+
+		return $this->config[ $key ] ?? null;
+
+	}
+
+
+	public function get_identifier(): string {
+
+		return $this->config['data_prefix'] . $this->config['id'];
+
+	}
+
+
+	public function create(): void {
+
+		add_action( 'customize_register', array( $this, 'hook' ) ); // @codeCoverageIgnore
+
+	}
+
+
+	abstract public function hook( WP_Customize_Manager $customizer ): void;
 
 }

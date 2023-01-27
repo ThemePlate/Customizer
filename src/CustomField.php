@@ -13,10 +13,23 @@ use WP_Customize_Manager;
 
 class CustomField extends Base {
 
-	public function create( WP_Customize_Manager $customizer ): void {
+	public const DEFAULTS = array(
+		'section' => '',
+	);
 
-		$customizer->add_setting( $this->id, array_merge( $this->config, array( 'type' => 'theme_mod' ) ) );
-		$customizer->add_control( $this->id, $this->config );
+	public function location( string $section ): self {
+
+		$this->config['section'] = $section;
+
+		return $this;
+
+	}
+
+
+	public function hook( WP_Customize_Manager $customizer ): void {
+
+		$customizer->add_setting( $this->get_identifier(), array_merge( $this->config, array( 'type' => 'theme_mod' ) ) );
+		$customizer->add_control( $this->get_identifier(), $this->config );
 
 	}
 

@@ -7,7 +7,5 @@ use ThemePlate\Customizer\CustomSection;
 
 $section = new CustomSection( 'My Section', $args );
 
-$section->fields( $list );
-
-add_action( 'customize_register', array( $section, 'create' ) );
+$section->fields( $list )->location( $panel )->create();
 ```

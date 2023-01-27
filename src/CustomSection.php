@@ -14,6 +14,10 @@ use WP_Customize_Manager;
 
 class CustomSection extends Base {
 
+	public const DEFAULTS = array(
+		'panel' => '',
+	);
+
 	protected ?Fields $fields = null;
 
 
@@ -26,17 +30,28 @@ class CustomSection extends Base {
 	}
 
 
-	public function create( WP_Customize_Manager $customizer ): void {
+	public function location( string $panel ): self {
 
-		$customizer->add_section( $this->id, $this->config );
+		$this->config['panel'] = $panel;
+
+		return $this;
+
+	}
+
+
+	public function hook( WP_Customize_Manager $customizer ): void {
+
+		$customizer->add_section( $this->get_identifier(), $this->config );
 
 		if ( null !== $this->fields ) {
 			foreach ( $this->fields->get_collection() as $field ) {
 				$config = $field->get_config();
 
-				$config['section'] = $this->id;
+				$config['data_prefix'] = $this->get_config( 'data_prefix' );
 
-				( new CustomField( $field->get_config( 'title' ), $config ) )->create( $customizer );
+				( new CustomField( $field->get_config( 'title' ), $config ) )
+					->location( $this->get_identifier() )
+					->hook( $customizer );
 			}
 		}
 
