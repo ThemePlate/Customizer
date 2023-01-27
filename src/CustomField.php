@@ -17,6 +17,7 @@ class CustomField extends Base {
 		'section' => '',
 	);
 
+
 	public function location( string $section ): self {
 
 		$this->config['section'] = $section;

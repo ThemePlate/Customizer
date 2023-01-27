@@ -19,8 +19,6 @@ abstract class Base {
 		'data_prefix' => '',
 	);
 
-	protected ?Fields $fields = null;
-
 	protected array $config;
 
 
