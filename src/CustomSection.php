@@ -10,6 +10,7 @@
 namespace ThemePlate\Customizer;
 
 use ThemePlate\Core\Fields;
+use ThemePlate\Core\Helper\FieldsHelper;
 use WP_Customize_Manager;
 
 class CustomSection extends Base {
@@ -48,6 +49,7 @@ class CustomSection extends Base {
 				$config = $field->get_config();
 
 				$config['data_prefix'] = $this->get_config( 'data_prefix' );
+				$config['default']     = FieldsHelper::get_default_value( $field );
 
 				( new CustomField( $field->get_config( 'title' ), $config ) )
 					->location( $this->get_identifier() )
