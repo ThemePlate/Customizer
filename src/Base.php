@@ -27,7 +27,10 @@ abstract class Base {
 		$this->config = MainHelper::fool_proof( self::DEFAULTS, $config );
 		$this->config = MainHelper::fool_proof( static::DEFAULTS, $this->config );
 
-		$this->config['id']    = sanitize_title( $title );
+		if ( empty( $config['id'] ) ) {
+			$this->config['id'] = sanitize_title( $title );
+		}
+
 		$this->config['title'] = $title;
 
 	}

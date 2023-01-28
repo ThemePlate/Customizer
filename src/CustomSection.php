@@ -48,8 +48,9 @@ class CustomSection extends Base {
 			foreach ( $this->fields->get_collection() as $field ) {
 				$config = $field->get_config();
 
-				$config['data_prefix'] = $this->get_config( 'data_prefix' );
-				$config['default']     = FieldsHelper::get_default_value( $field );
+				$prefix            = $this->get_config( 'data_prefix' );
+				$config['id']      = $field->data_key( $prefix );
+				$config['default'] = FieldsHelper::get_default_value( $field );
 
 				( new CustomField( $field->get_config( 'title' ), $config ) )
 					->location( $this->get_identifier() )

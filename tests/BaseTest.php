@@ -14,12 +14,17 @@ class BaseTest extends WP_UnitTestCase {
 	protected Base $base;
 	protected string $title  = 'My Base';
 	protected string $prefix = 'themeplate_';
+	protected string $id     = 'custom_id';
 
 	protected function setUp(): void {
 		$config = array();
 
 		if ( 'test_config_with_prefix' === $this->getName() ) {
 			$config['data_prefix'] = $this->prefix;
+		}
+
+		if ( 'test_config_with_id' === $this->getName() ) {
+			$config['id'] = $this->id;
 		}
 
 		$this->base = new class( $this->title, $config ) extends Base {
@@ -45,6 +50,16 @@ class BaseTest extends WP_UnitTestCase {
 		$expected = array(
 			'data_prefix' => $this->prefix,
 			'id'          => sanitize_title( $this->title ),
+			'title'       => $this->title,
+		);
+
+		$this->assertEquals( $expected, $this->base->get_config() );
+	}
+
+	public function test_config_with_id(): void {
+		$expected = array(
+			'data_prefix' => '',
+			'id'          => $this->id,
 			'title'       => $this->title,
 		);
 
