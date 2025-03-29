@@ -22,9 +22,9 @@ class CustomSection extends Base {
 	protected ?Fields $fields = null;
 
 
-	public function fields( array $list ): self {
+	public function fields( array $collection ): self {
 
-		$this->fields = new Fields( $list );
+		$this->fields = new Fields( $collection );
 
 		return $this;
 
@@ -44,7 +44,7 @@ class CustomSection extends Base {
 
 		$customizer->add_section( $this->get_identifier(), $this->config );
 
-		if ( null !== $this->fields ) {
+		if ( $this->fields instanceof Fields ) {
 			foreach ( $this->fields->get_collection() as $field ) {
 				$config = $field->get_config();
 

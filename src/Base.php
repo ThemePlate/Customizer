@@ -9,7 +9,6 @@
 
 namespace ThemePlate\Customizer;
 
-use ThemePlate\Core\Fields;
 use ThemePlate\Core\Helper\MainHelper;
 use WP_Customize_Manager;
 
@@ -59,7 +58,7 @@ abstract class Base {
 
 	public function create( ?WP_Customize_Manager $customizer = null ): void {
 
-		if ( did_action( 'customize_register' ) && null !== $customizer ) {
+		if ( did_action( 'customize_register' ) && $customizer instanceof WP_Customize_Manager ) {
 			$this->hook( $customizer );
 		} else {
 			add_action( 'customize_register', array( $this, 'hook' ) ); // @codeCoverageIgnore
